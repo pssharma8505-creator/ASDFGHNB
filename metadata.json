@@ -1,0 +1,6 @@
+{
+  "name": "Eastern Alliance Automation",
+  "description": "Ultra-premium, modern industrial automation website for Eastern Alliance Automation LLP. Specializing in electrical control panels, PLC solutions, drives, and engineering services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

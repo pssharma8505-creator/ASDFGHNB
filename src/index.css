@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+}
+
+:root {
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: #e2e8f0;
+  color-scheme: light;
+}
+
+.dark {
+  --bg-primary: #09090b;
+  --bg-card: #18181b;
+  --text-primary: #f8fafc;
+  --text-secondary: #a1a1aa;
+  --border-color: #27272a;
+  color-scheme: dark;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Responsive Content Container utility for full-screen edge-to-edge layouts */
+.container-wide {
+  width: min(100% - 32px, 1720px);
+  margin-inline: auto;
+}
+
+@media (min-width: 1600px) {
+  .container-wide {
+    width: min(100% - 48px, 1760px);
+  }
+}
+
+@media (max-width: 640px) {
+  .container-wide {
+    width: min(100% - 24px, 100%);
+  }
+}
+
+/* View Transition API optimization for instant 60fps ink-drop theme ripple */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Custom hide scrollbar utility for fluid horizontal filters */
+@utility scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+
+
