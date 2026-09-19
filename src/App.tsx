@@ -14,18 +14,16 @@ import InquiryViewer from "./components/InquiryViewer";
 import Footer from "./components/Footer";
 import GalleryPage from "./components/GalleryPage";
 import DynamicIsland from "./components/DynamicIsland";
-import { ThemeProvider, useTheme } from "./context/ThemeContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { ThemeRipple } from "./components/ThemeRipple";
 import { Zap, MessageSquare, ArrowUp } from "lucide-react";
 
 function MainApp() {
-  const { resolvedDarkMode } = useTheme();
   const [currentPage, setCurrentPage] = useState<"home" | "gallery">("home");
   const [activeSection, setActiveSection] = useState("home");
   const [preselectedItem, setPreselectedItem] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Premium, buttery-smooth cubic ease-in-out scroll animation
   const animateScrollTo = useCallback((targetY: number, duration: number = 750) => {
     const startY = window.scrollY || window.pageYOffset;
     const difference = targetY - startY;
@@ -33,7 +31,6 @@ function MainApp() {
     
     let startTime: number | null = null;
 
-    // Cubic ease-in-out formula for fluid natural motion
     const easeInOutCubic = (t: number) => {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     };
@@ -56,7 +53,6 @@ function MainApp() {
     requestAnimationFrame(step);
   }, []);
 
-  // Unified smooth scroll orchestrator with custom offsets for sticking navbar
   const scrollToSection = useCallback((id: string) => {
     if (id === "gallery_page") {
       setCurrentPage("gallery");
@@ -77,7 +73,6 @@ function MainApp() {
     if (currentPage !== "home") {
       setCurrentPage("home");
       setActiveSection(id);
-      // Set a short delay to let the Home page render before we scroll to it
       setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
@@ -104,7 +99,6 @@ function MainApp() {
     }
   }, [currentPage, animateScrollTo]);
 
-  // Scroll listener with active throttling to prevent layout thrashing and keep performance buttery-smooth
   useEffect(() => {
     let lastScrollTime = 0;
     let frameId: number | null = null;
@@ -112,7 +106,6 @@ function MainApp() {
     const handleScroll = () => {
       const now = Date.now();
       
-      // Update the scroll-to-top button state instantly
       const currentScrollY = window.scrollY;
       if (currentScrollY > 400) {
         setShowScrollTop(true);
@@ -125,7 +118,6 @@ function MainApp() {
         return;
       }
 
-      // Throttle the heavy section position calculations to run at most once per 100ms
       if (now - lastScrollTime >= 100) {
         lastScrollTime = now;
         
@@ -179,7 +171,7 @@ function MainApp() {
   };
 
   return (
-    <div className="bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 min-h-screen font-sans transition-colors duration-300 overflow-x-hidden selection:bg-slate-200 dark:selection:bg-zinc-800">
+    <div className="bg-[#fbfbfd] text-slate-900 min-h-screen font-sans transition-colors duration-300 overflow-x-hidden selection:bg-slate-200">
       <ThemeRipple />
 
       {/* Dynamic SEO JSON-LD Schema Markup */}
@@ -271,7 +263,6 @@ function MainApp() {
         </>
       ) : (
         <GalleryPage
-          darkMode={resolvedDarkMode}
           onBackToHome={() => {
             setCurrentPage("home");
             setActiveSection("home");
@@ -288,27 +279,24 @@ function MainApp() {
       {/* Interactive fluid Dynamic Island at the bottom center */}
       <DynamicIsland scrollToSection={scrollToSection} currentPage={currentPage} />
 
-      {/* Multi-tier sticky widgets */}
+      {/* Sticky floating CTAs */}
       <div className="fixed bottom-6 left-6 z-40 hidden md:flex flex-col space-y-3" id="sticky-floating-ctas">
-        
-        {/* Quick WhatsApp chat access */}
         <a
           href="https://wa.me/919457585950"
           target="_blank"
           rel="noreferrer"
-          className="p-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/10 hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer group"
+          className="p-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer group"
           title="Direct talk to Sales Head"
         >
-          <MessageSquare className="w-5.5 h-5.5 fill-current" />
+          <MessageSquare className="w-5 h-5 fill-current" />
         </a>
         
-        {/* Quick engineering panel shortcut */}
         <button
           onClick={() => scrollToSection("custom-control-panel")}
-          className="p-3.5 rounded-full bg-slate-900 border border-slate-800 dark:bg-zinc-800 text-white shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+          className="p-3.5 rounded-full bg-slate-900 text-white shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
           title="Consult custom assembly calculator"
         >
-          <Zap className="w-5.5 h-5.5 text-amber-400 fill-current animate-pulse" />
+          <Zap className="w-5 h-5 text-amber-400 fill-current animate-pulse" />
         </button>
       </div>
 
@@ -316,7 +304,7 @@ function MainApp() {
       {showScrollTop && (
         <button
           onClick={() => animateScrollTo(0, 600)}
-          className="fixed bottom-24 right-6 z-40 w-10 h-10 rounded-full bg-white text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:text-white dark:border-zinc-700 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="fixed bottom-24 right-6 z-40 w-10 h-10 rounded-full bg-white text-slate-900 border border-slate-200 flex items-center justify-center shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
           id="sticky-scroll-top-button"
           title="Scroll to Top"
         >
@@ -335,4 +323,3 @@ export default function App() {
     </ThemeProvider>
   );
 }
-

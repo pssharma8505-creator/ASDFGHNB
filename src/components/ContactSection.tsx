@@ -60,77 +60,74 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact-us" className="py-24 lg:py-28 xl:py-32 bg-white dark:bg-zinc-950 transition-colors border-t border-slate-200 dark:border-zinc-900 w-full">
+    <section id="contact-us" className="py-24 bg-[#fbfbfd] text-slate-900 transition-colors border-t border-slate-200/60 w-full">
       <div className="container-wide">
         
         {/* Title Block */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center space-x-2 text-slate-500 dark:text-zinc-400 font-sans text-xs uppercase tracking-widest font-semibold mb-3">
-            <Compass className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/80 text-slate-600 font-sans text-xs uppercase tracking-wider font-semibold mb-4">
+            <Compass className="w-3.5 h-3.5 text-slate-700" />
             <span>Connect Center</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold text-slate-900 dark:text-white tracking-[-0.025em] leading-[1.1]">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold text-slate-900 tracking-[-0.03em] leading-[1.1]">
             Contact Our Engineers
           </h2>
-          <p className="text-slate-600 dark:text-zinc-400 mt-4 text-base sm:text-lg font-normal leading-relaxed">
+          <p className="text-slate-600 mt-4 text-base sm:text-lg font-normal leading-relaxed">
             Have questions about copper busbar load specifications or DC drive calibration? Write to our division in Ghaziabad.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
-          {/* Left Block: General corporate contacts metadata */}
+          {/* Left Block */}
           <div className="lg:col-span-5 space-y-8" id="contact-coordinates">
             
-            <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 p-6 space-y-6 bg-slate-50 dark:bg-zinc-900/40">
-              <h3 className="font-sans font-bold text-lg tracking-tight text-zinc-900 dark:text-white">
+            <div className="rounded-3xl border border-slate-200/80 p-8 space-y-6 bg-white shadow-xs">
+              <h3 className="font-sans font-bold text-xl tracking-tight text-slate-900">
                 Eastern Alliance Automation LLP
               </h3>
-              <p className="font-sans text-sm sm:text-base text-sky-600 dark:text-sky-400 font-medium leading-relaxed">
+              <p className="font-sans text-sm text-slate-600 font-normal leading-relaxed">
                 Our plant is located in the key manufacturing hub of Uttar Pradesh, equipped to assemble, test, and ship control panels globally.
               </p>
 
-              <div className="space-y-4">
-                {/* Physical Location */}
-                <div className="flex items-start space-x-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">
-                  <MapPin className="w-5 h-5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5" />
+              <div className="space-y-4 pt-2 border-t border-slate-100">
+                <div className="flex items-start space-x-3 text-xs sm:text-sm text-slate-600">
+                  <MapPin className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="block font-bold">Main Works Facility</span>
-                    <span className="block font-light">Kh. No. 2563, Gausala Road, Indraprastha Marg,</span>
-                    <span className="block font-light">near Metro Power House, Karhera colony, Mohan Nagar,</span>
-                    <span className="font-semibold">Ghaziabad, Uttar Pradesh 201007</span>
+                    <span className="block font-bold text-slate-900">Main Works Facility</span>
+                    <span className="block font-normal">Kh. No. 2563, Gausala Road, Indraprastha Marg,</span>
+                    <span className="block font-normal">near Metro Power House, Karhera colony, Mohan Nagar,</span>
+                    <span className="font-bold text-slate-900">Ghaziabad, Uttar Pradesh 201007</span>
                   </div>
                 </div>
 
-                {/* Telephone */}
-                <div className="flex items-start space-x-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">
-                  <Phone className="w-5 h-5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5" />
+                <div className="flex items-start space-x-3 text-xs sm:text-sm text-slate-600">
+                  <Phone className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="block font-bold">WhatsApp Direct Lines</span>
-                    <a href="https://wa.me/919457585950" target="_blank" rel="noreferrer" className="hover:underline text-zinc-950 dark:text-white font-medium flex items-center space-x-1">
+                    <span className="block font-bold text-slate-900">WhatsApp Direct Lines</span>
+                    <a href="https://wa.me/919457585950" target="_blank" rel="noreferrer" className="hover:underline text-slate-900 font-bold flex items-center space-x-1">
                       <span>+91 9457585950</span>
                       <ArrowUpRight className="w-3.5 h-3.5 shrink-0" />
                     </a>
                   </div>
                 </div>
 
-                {/* Official email */}
-                <div className="flex items-start space-x-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">
-                  <Mail className="w-5 h-5 text-zinc-400 dark:text-zinc-500 shrink-0 mt-0.5" />
+                <div className="flex items-start space-x-3 text-xs sm:text-sm text-slate-600">
+                  <Mail className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="block font-bold">Email Coordinates</span>
-                    <span className="text-zinc-950 dark:text-white font-medium select-all">info@easternallianceautomation.in</span>
+                    <span className="block font-bold text-slate-900">Email Coordinates</span>
+                    <span className="text-slate-900 font-bold select-all">info@easternallianceautomation.in</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Embedded Google Map Frame with customizable markers */}
-            <div className="rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 h-64 shadow-md bg-zinc-100" id="google-mapping-box">
+            {/* Embedded Google Map Frame */}
+            <div className="rounded-3xl overflow-hidden border border-slate-200/80 h-64 shadow-xs bg-slate-100" id="google-mapping-box">
               <iframe
                 title="EAA Ghaziabad Industrial Map Location"
                 src="https://maps.google.com/maps?q=Kh.+No.+2563%2C+Gausala+Road%2C+Indraprastha+Marg%2C+near+Metro+Power+House%2C+Karhera+colony%2C+Mohan+Nagar%2C+Ghaziabad%2C+Uttar+Pradesh+201007&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                className="w-full h-full border-0 filter grayscale dark:invert dark:opacity-85"
+                className="w-full h-full border-0"
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer"
@@ -140,16 +137,16 @@ export default function ContactSection() {
           </div>
 
           {/* Right Column: Contact Inquiry Form */}
-          <div className="lg:col-span-7 bg-slate-50 dark:bg-zinc-900/40 p-8 rounded-2xl border border-slate-200 dark:border-zinc-800" id="contact-form-box">
-            <h3 className="font-sans font-bold text-lg tracking-tight text-zinc-900 dark:text-white mb-6">
+          <div className="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-xs" id="contact-form-box">
+            <h3 className="font-sans font-bold text-xl tracking-tight text-slate-900 mb-6">
               Send Dispatch Message
             </h3>
             
-            <form onSubmit={handleContactSubmit} className="space-y-4">
+            <form onSubmit={handleContactSubmit} className="space-y-5">
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                     Your Name *
                   </label>
                   <input
@@ -159,12 +156,12 @@ export default function ContactSection() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="e.g. Kapil Dev"
-                    className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 dark:border-zinc-850 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all"
+                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition-all"
                     id="contact-name-input"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                     Your Email Coordinates *
                   </label>
                   <input
@@ -174,14 +171,14 @@ export default function ContactSection() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="e.g. engineering@yourfirm.in"
-                    className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 dark:border-zinc-850 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all"
+                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition-all"
                     id="contact-email-input"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   Subject Matter
                 </label>
                 <input
@@ -189,13 +186,13 @@ export default function ContactSection() {
                   name="subject"
                   value={formData.subject}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 dark:border-zinc-850 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all"
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition-all"
                   id="contact-subject-input"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   Detailed Query Message *
                 </label>
                 <textarea
@@ -205,7 +202,7 @@ export default function ContactSection() {
                   value={formData.message}
                   onChange={handleInputChange}
                   placeholder="State the specs, PLC types, or required services you are looking to address..."
-                  className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 dark:border-zinc-850 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-zinc-900 transition-all resize-y"
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 bg-slate-50 text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition-all resize-y"
                   id="contact-message-input"
                 />
               </div>
@@ -213,14 +210,14 @@ export default function ContactSection() {
               {/* Status block feedback */}
               <div id="contact-submit-feedback">
                 {success && (
-                  <div className="flex items-center space-x-2 text-emerald-600 dark:text-emerald-400 text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/20 py-2.5 px-4 rounded-xl border border-emerald-100 dark:border-emerald-900">
-                    <CheckCircle2 className="w-4.5 h-4.5 shrink-0" />
+                  <div className="flex items-center space-x-2 text-emerald-700 text-xs font-semibold bg-emerald-50 py-2.5 px-4 rounded-xl border border-emerald-200">
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
                     <span>Your dispatch was sent successfully to EAA database. We will contact you back!</span>
                   </div>
                 )}
                 {errorMsg && (
-                  <div className="flex items-center space-x-2 text-red-600 dark:text-red-400 text-xs font-semibold bg-red-50 dark:bg-red-950/20 py-2.5 px-4 rounded-xl border border-red-100 dark:border-red-900">
-                    <AlertTriangle className="w-4.5 h-4.5 shrink-0" />
+                  <div className="flex items-center space-x-2 text-rose-700 text-xs font-semibold bg-rose-50 py-2.5 px-4 rounded-xl border border-rose-200">
+                    <AlertTriangle className="w-4 h-4 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
                 )}
@@ -230,7 +227,7 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full sm:w-auto px-6 py-3 bg-zinc-950 dark:bg-white text-white dark:text-black font-sans text-xs font-bold uppercase tracking-wider rounded-lg transition-all hover:bg-zinc-850 disabled:opacity-50 flex items-center justify-center space-x-2 shadow"
+                  className="w-full sm:w-auto px-8 py-3.5 bg-slate-900 text-white font-sans text-xs font-bold uppercase tracking-wider rounded-2xl transition-all hover:bg-slate-800 disabled:opacity-50 flex items-center justify-center space-x-2 shadow-xs cursor-pointer active:scale-95"
                   id="contact-message-submit-button"
                 >
                   <Send className="w-3.5 h-3.5 fill-current shrink-0" />

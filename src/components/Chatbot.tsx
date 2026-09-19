@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send, Cpu, Bot, User, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
+import { X, Send, Cpu, Bot, User } from "lucide-react";
 import { ChatMessage } from "../types";
 
 export default function Chatbot() {
@@ -23,7 +23,6 @@ export default function Chatbot() {
     "Get EAA contact details.",
   ];
 
-  // Auto scroll logic to keep chat view pinned at end
   useEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
@@ -38,7 +37,6 @@ export default function Chatbot() {
       setInputVal("");
     }
 
-    // Add user message
     const userMessage: ChatMessage = {
       role: "user",
       text: textToSend,
@@ -49,13 +47,11 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      // Reconstruct simple history format from current array
       const historyPayload = messages.slice(1).map((m) => ({
         role: m.role,
         text: m.text,
       }));
 
-      // Submit to server endpoint using standard parameters
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,51 +88,47 @@ export default function Chatbot() {
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans" id="floating-chatbot-block">
       
-      {/* Floating Circle Launcher Action Badge */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="w-14 h-14 rounded-full bg-zinc-950 text-white dark:bg-white dark:text-black flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all text-sm font-semibold cursor-pointer group"
+          className="w-13 h-13 rounded-full bg-slate-900 text-white flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all text-sm font-semibold cursor-pointer group"
           id="chatbot-open-badge"
           title="Consult AI engineering core"
         >
-          <Bot className="w-6 h-6 animate-pulse group-hover:rotate-12 transition-transform" />
+          <Bot className="w-6 h-6 group-hover:rotate-12 transition-transform" />
         </button>
       )}
 
-      {/* Actual Expanded Chat Window Context */}
       {isOpen && (
         <div
-          className="w-[340px] sm:w-[400px] h-[55vh] min-h-[460px] max-h-[640px] rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 shadow-2xl flex flex-col justify-between overflow-hidden"
+          className="w-[340px] sm:w-[400px] h-[55vh] min-h-[460px] max-h-[600px] rounded-3xl bg-white border border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden"
           id="chatbot-window-panel"
         >
           
-          {/* Header Console */}
-          <div className="px-5 py-4 bg-zinc-950 text-white dark:bg-zinc-950 dark:text-white flex items-center justify-between border-b border-zinc-800 shrink-0">
+          <div className="px-5 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
             <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-100">
-                <Cpu className="w-4 h-4 text-emerald-400 fill-current animate-pulse" />
+              <div className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-white">
+                <Cpu className="w-4 h-4 text-emerald-400 fill-current" />
               </div>
               <div>
                 <h3 className="text-sm font-bold tracking-tight">EAA AI Engine</h3>
                 <div className="flex items-center space-x-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-emerald-400">Grid Online</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="text-[9px] font-sans font-bold uppercase tracking-wider text-slate-300">Grid Online</span>
                 </div>
               </div>
             </div>
             
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-lg hover:bg-zinc-850 text-zinc-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
               id="chatbot-close-action"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Conversation history area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-55/40 dark:bg-zinc-950/20" id="chatbot-message-scroll">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50" id="chatbot-message-scroll">
             {messages.map((m, idx) => (
               <div
                 key={idx}
@@ -144,42 +136,34 @@ export default function Chatbot() {
                   m.role === "user" ? "ml-auto flex-row-reverse space-x-reverse" : "mr-auto"
                 }`}
               >
-                {/* Avatar */}
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                  m.role === "user" ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200" : "bg-zinc-950 text-white"
+                  m.role === "user" ? "bg-slate-200 text-slate-800" : "bg-slate-900 text-white"
                 }`}>
                   {m.role === "user" ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
                 </div>
 
-                {/* Message bubble */}
                 <div className="space-y-1">
-                  <div className={`p-3 rounded-2xl text-xs leading-relaxed ${
+                  <div className={`p-3.5 rounded-2xl text-xs leading-relaxed ${
                     m.role === "user"
-                      ? "bg-zinc-900 text-white dark:bg-white dark:text-black rounded-tr-none font-medium"
-                      : "bg-white text-zinc-8D dark:bg-zinc-850 dark:text-zinc-100 rounded-tl-none border border-zinc-150 dark:border-zinc-800"
+                      ? "bg-slate-900 text-white rounded-tr-none font-medium"
+                      : "bg-white text-slate-800 rounded-tl-none border border-slate-200/80 shadow-xs"
                   }`}>
                     {m.text}
                   </div>
-                  <span className="block text-[8px] text-zinc-400 px-1 font-mono">
+                  <span className="block text-[9px] text-slate-400 px-1 font-sans">
                     {m.timestamp}
                   </span>
                 </div>
               </div>
             ))}
 
-            {/* Simulated generation loading state */}
             {loading && (
               <div className="flex items-center space-x-2 mr-auto max-w-[85%]">
-                <div className="w-7 h-7 rounded-full bg-zinc-950 text-white flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center shrink-0">
                   <Bot className="w-3.5 h-3.5 animate-bounce" />
                 </div>
-                <div className="p-3 bg-zinc-100 dark:bg-zinc-850 rounded-2xl rounded-tl-none border border-zinc-150 dark:border-zinc-800 text-xs text-zinc-400">
-                  <span className="inline-flex space-x-1">
-                    <span className="animate-ping">.</span>
-                    <span className="animate-ping [animation-delay:0.2s]">.</span>
-                    <span className="animate-ping [animation-delay:0.4s]">.</span>
-                  </span>
-                  <span> Analyzing parameters</span>
+                <div className="p-3 bg-white rounded-2xl rounded-tl-none border border-slate-200 text-xs text-slate-500 shadow-xs">
+                  <span>Analyzing parameters...</span>
                 </div>
               </div>
             )}
@@ -187,10 +171,9 @@ export default function Chatbot() {
             <div ref={endOfMessagesRef} />
           </div>
 
-          {/* Quick recommendations panel */}
           {messages.length === 1 && !loading && (
-            <div className="p-3 bg-zinc-100/50 dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 shrink-0">
-              <span className="block text-[9px] font-mono font-bold text-zinc-400 uppercase tracking-widest mb-1.5 pl-1">
+            <div className="p-3 bg-slate-100/80 border-t border-slate-200 shrink-0">
+              <span className="block text-[9px] font-sans font-bold text-slate-400 uppercase tracking-wider mb-1.5 pl-1">
                 Consultation Prompts
               </span>
               <div className="flex flex-wrap gap-1.5" id="chatbot-prompts-group">
@@ -198,7 +181,7 @@ export default function Chatbot() {
                   <button
                     key={i}
                     onClick={() => handleSendMessage(qp)}
-                    className="text-[10px] bg-white hover:bg-zinc-50 border border-zinc-200 dark:bg-zinc-850 dark:hover:bg-zinc-800 dark:border-zinc-800 px-2.5 py-1.5 rounded-lg text-zinc-700 dark:text-zinc-200 font-medium transition-colors text-left truncate max-w-full"
+                    className="text-[10px] bg-white hover:bg-slate-50 border border-slate-200 px-2.5 py-1.5 rounded-xl text-slate-700 font-bold transition-colors text-left truncate max-w-full cursor-pointer shadow-xs"
                   >
                     {qp}
                   </button>
@@ -207,8 +190,7 @@ export default function Chatbot() {
             </div>
           )}
 
-          {/* Input text controls bar */}
-          <div className="p-3 border-t border-zinc-150 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center space-x-2 shrink-0">
+          <div className="p-3 border-t border-slate-200 bg-white flex items-center space-x-2 shrink-0">
             <input
               type="text"
               placeholder="Query electrical specs, PLC solutions..."
@@ -216,13 +198,13 @@ export default function Chatbot() {
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
               disabled={loading}
-              className="flex-1 px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 text-xs bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-zinc-900 disabled:opacity-50"
+              className="flex-1 px-3.5 py-2.5 rounded-2xl border border-slate-200 text-xs bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white disabled:opacity-50"
               id="chatbot-text-input"
             />
             <button
               onClick={() => handleSendMessage()}
               disabled={loading || !inputVal.trim()}
-              className="p-2.5 rounded-xl bg-zinc-950 text-white dark:bg-white dark:text-black hover:scale-105 active:scale-95 disabled:scale-100 disabled:opacity-40 transition-all cursor-pointer"
+              className="p-2.5 rounded-2xl bg-slate-900 text-white hover:bg-slate-800 active:scale-95 disabled:opacity-40 transition-all cursor-pointer shadow-xs"
               id="chatbot-send-action"
             >
               <Send className="w-3.5 h-3.5 fill-current" />
