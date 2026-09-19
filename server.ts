@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import path from "path";
 import fs from "fs";
 import { createServer as createViteServer } from "vite";
@@ -30,7 +30,69 @@ function getGenAI(): GoogleGenAI {
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-app.use(express.json());
+// Security Hardening: Body limit protection against large payload DoS attacks
+app.use(express.json({ limit: "500kb" }));
+
+// Security Hardening Middleware: HTTP Defense Headers
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+
+  // Content Security Policy (CSP)
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+    "font-src 'self' https://fonts.gstatic.com data:; " +
+    "img-src 'self' data: https: blob:; " +
+    "connect-src 'self' https:; " +
+    "frame-src 'self' https://maps.google.com https://drive.google.com; " +
+    "media-src 'self' https://res.cloudinary.com blob:;"
+  );
+
+  next();
+});
+
+// Security Hardening: Application-Level Rate Limiter ("Firewall")
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 15;
+
+function createRateLimiter(maxRequests = MAX_REQUESTS_PER_WINDOW) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const ip = req.ip || req.socket.remoteAddress || "unknown";
+    const now = Date.now();
+
+    const record = rateLimitMap.get(ip);
+    if (!record || now > record.resetTime) {
+      rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+      return next();
+    }
+
+    if (record.count >= maxRequests) {
+      return res.status(429).json({
+        error: "Too many requests. Please wait a moment before sending more inquiries.",
+      });
+    }
+
+    record.count += 1;
+    next();
+  };
+}
+
+// Input Sanitization Helper against XSS / injection attacks
+function sanitizeString(str: any, maxLen = 1000): string {
+  if (typeof str !== "string") return "";
+  return str
+    .trim()
+    .slice(0, maxLen)
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
 
 // Store temporary inquiry data in writable /tmp directory for container compatibility
 const INQUIRIES_FILE = path.join(process.env.TMPDIR || "/tmp", "inquiries.json");
@@ -75,28 +137,33 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", time: new Date().toISOString() });
 });
 
-// API: Save Inquiry
-app.post("/api/inquiries", (req, res) => {
+// API: Save Inquiry (Protected by Rate Limiter and Input Sanitization)
+app.post("/api/inquiries", createRateLimiter(10), (req, res) => {
   try {
     const { name, companyName, productOrService, quantity, mobile, email, requirement, type, budget, projectDescription } = req.body;
 
-    if (!name || !productOrService || !mobile || !email) {
+    const cleanName = sanitizeString(name, 100);
+    const cleanProductOrService = sanitizeString(productOrService, 200);
+    const cleanMobile = sanitizeString(mobile, 50);
+    const cleanEmail = sanitizeString(email, 100);
+
+    if (!cleanName || !cleanProductOrService || !cleanMobile || !cleanEmail) {
       return res.status(400).json({ error: "Missing required fields: name, productOrService, mobile, email" });
     }
 
     const inquiries = readInquiries();
     const newInquiry = {
       id: "INQ-" + Date.now().toString().slice(-6),
-      name,
-      companyName: companyName || "N/A",
-      productOrService,
-      quantity: quantity || "1",
-      mobile,
-      email,
-      requirement: requirement || "",
-      type: type || "standard",
-      budget: budget || null,
-      projectDescription: projectDescription || "",
+      name: cleanName,
+      companyName: sanitizeString(companyName, 150) || "N/A",
+      productOrService: cleanProductOrService,
+      quantity: sanitizeString(quantity, 20) || "1",
+      mobile: cleanMobile,
+      email: cleanEmail,
+      requirement: sanitizeString(requirement, 2000) || "",
+      type: sanitizeString(type, 50) || "standard",
+      budget: budget ? sanitizeString(budget, 50) : null,
+      projectDescription: sanitizeString(projectDescription, 2000) || "",
       status: "Received",
       createdAt: new Date().toISOString(),
     };
@@ -106,49 +173,50 @@ app.post("/api/inquiries", (req, res) => {
 
     res.json({ success: true, inquiry: newInquiry });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Internal server error. Failed to process inquiry." });
   }
 });
 
-// API: Fetch Inquiries (for real persistent tracking)
+// API: Fetch Inquiries
 app.get("/api/inquiries", (req, res) => {
   try {
     const inquiries = readInquiries();
     res.json(inquiries);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Failed to retrieve inquiries." });
   }
 });
 
-// API: Delete Inquiries (for management/testing)
+// API: Delete Inquiries
 app.delete("/api/inquiries/:id", (req, res) => {
   try {
     const { id } = req.params;
+    const cleanId = sanitizeString(id, 50);
     let inquiries = readInquiries();
-    inquiries = inquiries.filter((inq: any) => inq.id !== id);
+    inquiries = inquiries.filter((inq: any) => inq.id !== cleanId);
     writeInquiries(inquiries);
     res.json({ success: true });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Failed to delete inquiry." });
   }
 });
 
-// API: Chat assistant using @google/genai
-app.post("/api/chat", async (req, res) => {
+// API: Chat assistant using @google/genai (Protected by Rate Limiter)
+app.post("/api/chat", createRateLimiter(10), async (req, res) => {
   try {
     const { message, history } = req.body;
 
-    if (!message) {
+    const cleanMessage = sanitizeString(message, 1500);
+
+    if (!cleanMessage) {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Format chat history for @google/genai format
-    const formattedHistory = (history || []).map((m: any) => ({
+    const formattedHistory = (Array.isArray(history) ? history : []).slice(-10).map((m: any) => ({
       role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.text }],
+      parts: [{ text: sanitizeString(m.text, 1000) }],
     }));
 
-    // Create the conversation using Gemini 3.5 Flash (as requested for Q&A tasks)
     const ai = getGenAI();
     const chat = ai.chats.create({
       model: "gemini-3.5-flash",
@@ -194,11 +262,11 @@ Business Rules & Inquiries:
       history: formattedHistory,
     });
 
-    const response = await chat.sendMessage({ message });
+    const response = await chat.sendMessage({ message: cleanMessage });
     res.json({ text: response.text });
   } catch (error: any) {
     console.error("Gemini chatbot error:", error);
-    res.status(500).json({ error: "Sorry, our industrial AI core is currently performing grid maintenance. Please utilize our direct WhatsApp channel for live expert assistance. Error: " + error.message });
+    res.status(500).json({ error: "Our industrial AI core is currently performing grid maintenance. Please utilize our direct WhatsApp channel (+91 9457585950) for live assistance." });
   }
 });
 
@@ -226,3 +294,11 @@ async function init() {
 }
 
 init();
+
+/*
+RECOMMENDED DEPLOYMENT / HOSTING SECURITY CONFIGURATION:
+1. Cloudflare WAF / AWS WAF: Enable Web Application Firewall for Layer 7 DDoS mitigation and bot detection.
+2. NGINX Reverse Proxy: Configure rate limiting (`limit_req_zone $binary_remote_addr zone=one:10m rate=5r/s;`).
+3. SSL/TLS: Enforce HTTPS using TLS 1.3 certificates (e.g. via Let's Encrypt / Certbot).
+4. Environment Variables: Store GEMINI_API_KEY and secrets securely in host environment variables; never commit keys.
+*/
